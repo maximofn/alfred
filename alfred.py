@@ -54,7 +54,7 @@ def clean_result(result):
     # Answer: ['command', 'response']
     # Get the response.
     debug = False
-    pattern = r'^[\s\S]*.*\[+\s*[\'\"](.+)[\'\"]\s*,\s*[\'\"](.+)[\'\"]\s*\]+$'
+    pattern = r'^[\s\S]*.*\[+\s*[\'\"](.+)[\'\"]\s*,\s*[\'\"](.+)[\'\"]\s*\]+.*$'
     match = re.match(pattern, result)
     if debug:
         matches = re.findall(pattern, result)
