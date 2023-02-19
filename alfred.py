@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 import sys
 import subprocess
-from colorama import Fore, Style
-import platform
 import platform
 import re
-operating_system = platform.system()
 import os
+
+try:
+    from halo import Halo
+except ImportError:
+    print("✋ You need to install the halo package with pip3 install halo or pip install halo.")
+    sys.exit(1)
+
+try:
+    import openai
+except ImportError:
+    print("✋ You need to install the openai package with pip3 install openai or pip install openai.")
+    sys.exit(1)
 openai.api_key = None
-import openai
 if os.path.exists("open_ai_api_key.py"):
     from open_ai_api_key import OPENAI_API_KEY
     openai.api_key = OPENAI_API_KEY
@@ -27,17 +35,14 @@ EXAMPLES = [
     ["Convert example.png to a JPEG", "convert example.png example.jpg"],
     ["Create a git branch named 'new-feature'", "git branch new-feature"]
 ]
+OPERATING_SYSTEM = platform.system()
+EXIT = "exit"
 
 def get_command(prompt):
     result = openai.Completion.create(
         engine=MODEL,
         prompt=prompt,
         max_tokens=2048,
-        # temperature=0.0,
-        # top_p=1.0,
-        # frequency_penalty=0.0,
-        # presence_penalty=0.0,
-        # stop=["\n"],
     )
     if result:
         return clean_result(result.choices[0].text)
@@ -48,17 +53,19 @@ def clean_result(result):
     # Result is a string like 
     # Answer: ['command', 'response']
     # Get the response.
-    if "Answer: " in result:
-        print(f"result: {result}")
-        return result
-    response = result.split("Answer: ")[1]
-    # Remove the brackets.
-    response = response.replace("[", "")
-    response = response.replace("]", "")
-    # Remove the quotes.
-    response = response.replace("'", "")
-    # Split by coma.
-    response = response.split(", ")[1]
+    debug = False
+    pattern = r'^[\s\S]*.*\[+\s*[\'\"](.+)[\'\"]\s*,\s*[\'\"](.+)[\'\"]\s*\]+$'
+    match = re.match(pattern, result)
+    if debug:
+        matches = re.findall(pattern, result)
+        print(f"matches: {matches}")
+        print(f"match: {match.groups()}")
+        print(f"input: {result}")
+    if match:
+        response = match.group(2)
+    else:
+        response = result
+    if debug:    print(f"response: {response}")
     return response
 
 def main():
@@ -75,13 +82,15 @@ def main():
         if not user_prompt.strip():
             print("🤔 Tell me what do you want to do.")
             continue
-        elif user_prompt == "exit":
+        elif user_prompt.lower() == EXIT:
             print("👋")
             sys.exit(0)
 
         # Process user prompt
-        print("🧠 Thinking...")
-        command = get_command(f'{EXAMPLES_CONTEXT} "{user_prompt}" on {operating_system} operating system and return the command to accomplish the task like this examples: {EXAMPLES}')
+        spinner = Halo(text='🧠 Thinking...', spinner='dots')
+        spinner.start()
+        command = get_command(f'{EXAMPLES_CONTEXT} "{user_prompt}" on {OPERATING_SYSTEM} operating system and return the command to accomplish the task like this examples: {EXAMPLES}')
+        spinner.stop()
         if not command:
             print("🤔 I don't know.")
             continue
@@ -95,11 +104,14 @@ def main():
         if approved.lower() == "y":
             print(f"👍 {command}")
             CURRENT_JOB = subprocess.run(command, shell=True)
+        elif approved.lower() == EXIT:
+            print("👋")
+            sys.exit(0)
 
 if __name__ == "__main__":
     if openai.api_key is None:
         print("✋ You need to set your OpenAI API key in the OPENAI_API_KEY environment variable or in the open_ai_api_key.py file as OPENAI_API_KEY variable.")
         sys.exit(1)
-    print(operating_system)
+    print(OPERATING_SYSTEM)
     print(f"👋 Hello, human. I'm Alfred, your personal assistant. I can help you with your daily tasks. Tipe \"exit\" to quit.")
     main()
