@@ -17,7 +17,7 @@ Clone repository
 
 You just need to ask a question and **alfred** will answer it. To finish type `exit`
 
-![usage](gifs/alfred.gif)
+![usage](gifs/alfredx2.gif)
 
 ## Support
 
