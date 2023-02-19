@@ -11,9 +11,43 @@ pip install -y halo
 pip install --upgrade -y openai
 ```
 
-Clone repository
+Clone repository via `HTTPS` or `SSH`
+
+```
+git clone https://github.com/maximofn/alfred.git
+```
+
+or
+
+```
+git clone git@github.com:maximofn/alfred.git
+```
+
+Go to the alfred folder
+
+```
+cd alfred
+```
+
+## Openai API KEY
+
+Loggin to [open ai](https://platform.openai.com/overview) and get your open ai api key
+
+![open ai api key](gifs/openaix2.gif)
 
 ## Usage
+
+Create a file `open_ai_api_key.py` with the text `OPENAI_API_KEY = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"` adding your openai api or export your openai api to the `OPENAI_API_KEY` environment variable. For example
+
+```
+echo "OPENAI_API_KEY = 'sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'" > open_ai_api_key.py
+```
+
+Then run `alfred.py`
+
+```
+python alfred.py
+```
 
 You just need to ask a question and **alfred** will answer it. To finish type `exit`
 
