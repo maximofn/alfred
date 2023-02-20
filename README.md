@@ -7,8 +7,8 @@ Personal terminal assistant for all operating systems and languages
 Install requeriments
 
 ```
-pip install -y halo
-pip install --upgrade -y openai
+pip install halo
+pip install --upgrade openai
 ```
 
 Clone repository via `HTTPS` or `SSH`
