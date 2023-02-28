@@ -16,12 +16,28 @@ try:
 except ImportError:
     print("✋ You need to install the openai package with pip3 install openai or pip install openai.")
     sys.exit(1)
+
+
+def get_openai_api_key():
+    api_key = None
+    while not api_key:
+        api_key = input("🔑 Enter OpenAI API key: ")
+        if str(api_key).lower() == "exit":
+            print("👋")
+            sys.exit(0)
+        elif api_key != "":
+            print("👍")
+            os.environ["OPENAI_API_KEY"] = api_key
+
+
 openai.api_key = None
-if os.path.exists("open_ai_api_key.py"):
-    from open_ai_api_key import OPENAI_API_KEY
-    openai.api_key = OPENAI_API_KEY
-elif os.getenv("OPENAI_API_KEY"):
+# if os.path.exists("open_ai_api_key.py"):
+#     from open_ai_api_key import OPENAI_API_KEY
+#     openai.api_key = OPENAI_API_KEY
+if os.getenv("OPENAI_API_KEY"):
     openai.api_key = os.getenv("OPENAI_API_KEY")
+else:
+    get_openai_api_key()
 
 EXAMPLES_CONTEXT = "Command to accomplish the task"
 MODEL = "text-davinci-003"
