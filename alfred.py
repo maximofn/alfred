@@ -29,6 +29,7 @@ def get_openai_api_key():
             print("👍")
             os.environ["OPENAI_API_KEY"] = api_key
             print(os.getenv("OPENAI_API_KEY"))
+            openai.api_key
 
 
 openai.api_key = None
