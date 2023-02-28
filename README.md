@@ -7,8 +7,8 @@ Personal terminal assistant for all operating systems and languages
 Install requeriments
 
 ```
-pip install -y halo
-pip install --upgrade -y openai
+pip install halo
+pip install --upgrade openai
 ```
 
 Clone repository via `HTTPS` or `SSH`
@@ -31,7 +31,7 @@ cd alfred
 
 ## Openai API KEY
 
-Loggin to [open ai](https://platform.openai.com/overview) and get your open ai api key
+Loggin to <a href="https://platform.openai.com/overview" target="_blank">open ai</a> and get your open ai api key
 
 ![open ai api key](gifs/openaix2.gif)
 
