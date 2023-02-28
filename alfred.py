@@ -21,7 +21,7 @@ except ImportError:
 def get_openai_api_key():
     api_key = None
     while not api_key:
-        api_key = input("🔑 Enter OpenAI API key: ")
+        api_key = input("🔑 Enter your OpenAI API key: ")
         if str(api_key).lower() == "exit":
             print("👋")
             sys.exit(0)
