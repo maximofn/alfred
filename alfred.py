@@ -138,4 +138,7 @@ if __name__ == "__main__":
     print(f"👋 Hello, human. I'm Alfred, your personal assistant. I can help you with your daily tasks. Tipe \"exit\" to quit.")
     num_args = len(sys.argv)
     print(f"num_args: {num_args}")
+    if num_args > 1:
+        prompt = " ".join(sys.argv[1:])
+        print(f"prompt: {prompt}")
     main()
