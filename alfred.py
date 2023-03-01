@@ -30,7 +30,10 @@ def get_openai_api_key():
             with open('openai.key', 'wb') as f:
                 f.write(api_key.encode())
             openai.api_key = api_key
-
+            # Read api key from file.
+            with open('openai.key', 'rb') as f:
+                api_key = f.read().decode()
+                print(f"api key: {api_key}")
 
 openai.api_key = None
 # if os.path.exists("open_ai_api_key.py"):
