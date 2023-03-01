@@ -90,23 +90,28 @@ def clean_result(result):
     if debug:    print(f"response: {response}")
     return response
 
-def main():
-    while True:
-        # Get user prompt.
-        try:
-            user_prompt = input("👂~> ")
-        except EOFError:
-            print("<~ Farewell, human.")
-            sys.exit(0)
-        except KeyboardInterrupt:
-            print("👋")
-            sys.exit(0)
-        if not user_prompt.strip():
-            print("🤔 Tell me what do you want to do.")
-            continue
-        elif user_prompt.lower() == EXIT:
-            print("👋")
-            sys.exit(0)
+def main(prompt):
+    condition = True if prompt is None else False
+    while condition:
+        if prompt is None:
+            # Get user prompt.
+            try:
+                user_prompt = input("👂~> ")
+            except EOFError:
+                print("<~ Farewell, human.")
+                sys.exit(0)
+            except KeyboardInterrupt:
+                print("👋")
+                sys.exit(0)
+            if not user_prompt.strip():
+                print("🤔 Tell me what do you want to do.")
+                continue
+            elif user_prompt.lower() == EXIT:
+                print("👋")
+                sys.exit(0)
+        else:
+            user_prompt = prompt
+            prompt = None
 
         # Process user prompt
         spinner = Halo(text='🧠 Thinking...', spinner='dots')
@@ -137,8 +142,7 @@ if __name__ == "__main__":
         sys.exit(1)
     print(f"👋 Hello, human. I'm Alfred, your personal assistant. I can help you with your daily tasks. Tipe \"exit\" to quit.")
     num_args = len(sys.argv)
-    print(f"num_args: {num_args}")
+    prompt = None
     if num_args > 1:
         prompt = " ".join(sys.argv[1:])
-        print(f"prompt: {prompt}")
-    main()
+    main(prompt)
