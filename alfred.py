@@ -91,8 +91,9 @@ def clean_result(result):
     return response
 
 def main(prompt):
-    condition = True if prompt is None else False
+    condition = True
     while condition:
+        condition = True if prompt is None else False
         if prompt is None:
             # Get user prompt.
             try:
