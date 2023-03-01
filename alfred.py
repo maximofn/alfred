@@ -17,33 +17,6 @@ except ImportError:
     print("✋ You need to install the openai package with pip3 install openai or pip install openai.")
     sys.exit(1)
 
-
-def get_openai_api_key():
-    api_key = None
-    while not api_key:
-        api_key = input("🔑 Enter your OpenAI API key: ")
-        if str(api_key).lower() == "exit":
-            print("👋")
-            sys.exit(0)
-        elif api_key != "":
-            print("👍")
-            with open('openai.key', 'wb') as f:
-                f.write(api_key.encode())
-            openai.api_key = api_key
-            # Read api key from file.
-            with open('openai.key', 'rb') as f:
-                api_key = f.read().decode()
-                print(f"api key: {api_key}")
-
-openai.api_key = None
-# if os.path.exists("open_ai_api_key.py"):
-#     from open_ai_api_key import OPENAI_API_KEY
-#     openai.api_key = OPENAI_API_KEY
-if os.getenv("OPENAI_API_KEY"):
-    openai.api_key = os.getenv("OPENAI_API_KEY")
-else:
-    get_openai_api_key()
-
 EXAMPLES_CONTEXT = "Command to accomplish the task"
 MODEL = "text-davinci-003"
 EXAMPLES = [
@@ -57,7 +30,35 @@ EXAMPLES = [
     ["Create a git branch named 'new-feature'", "git branch new-feature"]
 ]
 OPERATING_SYSTEM = platform.system()
+API_KEY_PATH = "/usr/src/alfred/openai.key"
 EXIT = "exit"
+
+
+def get_from_user_openai_api_key():
+    api_key = None
+    while not api_key:
+        api_key = input("🔑 Enter your OpenAI API key: ")
+        if str(api_key).lower() == "exit":
+            print("👋")
+            sys.exit(0)
+        elif api_key != "":
+            print("👍")
+            with open(API_KEY_PATH, 'wb') as f:
+                f.write(api_key.encode())
+            openai.api_key = api_key
+
+def get_from_file_openai_api_key():
+    api_key = None
+    with open(API_KEY_PATH, 'rb') as f:
+        api_key = f.read().decode()
+    return api_key
+        
+def get_openai_api_key():
+    openai.api_key = None
+    if os.path.exists(API_KEY_PATH):
+        openai.api_key = get_from_file_openai_api_key()
+    else:
+        get_from_user_openai_api_key()
 
 def get_command(prompt):
     result = openai.Completion.create(
@@ -130,9 +131,9 @@ def main():
             sys.exit(0)
 
 if __name__ == "__main__":
+    get_openai_api_key()
     if openai.api_key is None:
         print("✋ You need to set your OpenAI API key in the OPENAI_API_KEY environment variable or in the open_ai_api_key.py file as OPENAI_API_KEY variable.")
         sys.exit(1)
-    print(OPERATING_SYSTEM)
     print(f"👋 Hello, human. I'm Alfred, your personal assistant. I can help you with your daily tasks. Tipe \"exit\" to quit.")
     main()
