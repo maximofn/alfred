@@ -141,9 +141,10 @@ if __name__ == "__main__":
     if openai.api_key is None:
         print("✋ You need to set your OpenAI API key in the OPENAI_API_KEY environment variable or in the open_ai_api_key.py file as OPENAI_API_KEY variable.")
         sys.exit(1)
-    print(f"👋 Hello, human. I'm Alfred, your personal assistant. I can help you with your daily tasks. Tipe \"exit\" to quit.")
     num_args = len(sys.argv)
     prompt = None
     if num_args > 1:
         prompt = " ".join(sys.argv[1:])
+    else:
+        print(f"👋 Hello, human. I'm Alfred, your personal assistant. I can help you with your daily tasks. Tipe \"exit\" to quit.")
     main(prompt)
