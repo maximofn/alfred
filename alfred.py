@@ -27,6 +27,8 @@ def get_openai_api_key():
             sys.exit(0)
         elif api_key != "":
             print("👍")
+            # print working directory
+            print(os.getcwd())
             os.environ["OPENAI_API_KEY"] = api_key
             print(os.getenv("OPENAI_API_KEY"))
             openai.api_key = api_key
