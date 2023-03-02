@@ -2,5 +2,5 @@ open_ai_api_key.py
 alfred_config.py
 __pycache__
 videos
-alfred/api_key
-alfred/crear_tags.md
+api_key
+crear_tags.md
