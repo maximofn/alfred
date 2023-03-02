@@ -4,29 +4,46 @@ Personal terminal assistant for all operating systems and languages
 
 ## Install
 
-Install requeriments
+Install system requeriments
+
+```
+sudo apt update
+sudo apt install -y python3 python3-pip git
+```
+
+### Install by installer
+
+From here, if you have a debian based system you can use the [alfred.deb](https://github.com/maximofn/alfred/blob/v1.3/alfredv1_3.deb) installer.
+
+### Install from source
+
+Install python requeriments
 
 ```
 pip install halo
 pip install --upgrade openai
 ```
 
-Clone repository via `HTTPS` or `SSH`
+Create source folder
 
 ```
-git clone https://github.com/maximofn/alfred.git
+sudo rm -r /usr/src/alfred
+cd /usr/src
+git clone -b branch_v1.3 https://github.com/maximofn/alfred.git
+cd /usr/src/alfred
+sudo find . -depth -not -name '*.py' -delete
 ```
 
-or
+Create symbolic link to /usr/bin/alfred
 
 ```
-git clone git@github.com:maximofn/alfred.git
+echo 'alias alfred="/usr/src/alfred/alfred.py"' >> ~/.bashrc
 ```
 
-Go to the alfred folder
+Restart bash
 
 ```
-cd alfred
+source ~/.bashrc
 ```
 
 ## Openai API KEY
@@ -37,19 +54,9 @@ Loggin to <a href="https://platform.openai.com/overview" target="_blank">open ai
 
 ## Usage
 
-Create a file `open_ai_api_key.py` with the text `OPENAI_API_KEY = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"` adding your openai api or export your openai api to the `OPENAI_API_KEY` environment variable. For example
+You can ask to alfred specific questions by typing `alfred` followed by your question
 
-```
-echo "OPENAI_API_KEY = 'sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'" > open_ai_api_key.py
-```
-
-Then run `alfred.py`
-
-```
-python alfred.py
-```
-
-You just need to ask a question and **alfred** will answer it. To finish type `exit`
+Or write `alfred` and keep asking him questions. To finish type `exit`
 
 ![usage](gifs/alfredx2.gif)
 
