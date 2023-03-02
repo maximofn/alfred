@@ -43,14 +43,15 @@ def get_from_user_openai_api_key():
             sys.exit(0)
         elif api_key != "":
             print("👍")
-            with open(API_KEY_PATH, 'wb') as f:
-                f.write(api_key.encode())
+            command = f"sudo -E sh -c \"echo '{api_key}' > /tmp/openai.key && mv /tmp/openai.key {API_KEY_PATH}\""
+            subprocess.run(command, shell=True)
             openai.api_key = api_key
 
 def get_from_file_openai_api_key():
     api_key = None
     with open(API_KEY_PATH, 'rb') as f:
         api_key = f.read().decode()
+        api_key = api_key.replace('\n', '')
     return api_key
         
 def get_openai_api_key():
