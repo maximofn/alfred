@@ -2,6 +2,8 @@
 
 Personal terminal assistant for all operating systems and languages
 
+![usage](gifs/alfredx4.gif)
+
 ## Install
 
 Install system requeriments
@@ -56,9 +58,11 @@ Loggin to <a href="https://platform.openai.com/overview" target="_blank">open ai
 
 You can ask to alfred specific questions by typing `alfred` followed by your question
 
+![usage](gifs/alfredx4.gif)
+
 Or write `alfred` and keep asking him questions. To finish type `exit`
 
-![usage](gifs/alfredx2.gif)
+![usage](gifs/alfredBuclex4.gif)
 
 ## Support
 
