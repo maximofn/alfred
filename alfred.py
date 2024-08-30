@@ -17,8 +17,8 @@ except ImportError:
     print("✋ You need to install the openai package with pip3 install openai or pip install openai.")
     sys.exit(1)
 
-EXAMPLES_CONTEXT = "Command to accomplish the task"
-MODEL = "text-davinci-003"
+EXAMPLES_CONTEXT = "Respond with a command to this user prompt"
+MODEL = "gpt-4o-mini"
 EXAMPLES = [
     ["Get the first 10 lines of a file", "head -n 10"],
     ["Find all files with a .txt extension", "find . -name '*.txt'"],
@@ -29,6 +29,9 @@ EXAMPLES = [
     ["Convert example.png to a JPEG", "convert example.png example.jpg"],
     ["Create a git branch named 'new-feature'", "git branch new-feature"]
 ]
+EXAMPLE_PROMPT = "You are a helpful assistant that responds about shell commands. Here you have some examples\n"
+for i in range(len(EXAMPLES)):
+    EXAMPLE_PROMPT += f"Command: {EXAMPLES[i][0]}\tResponse: {EXAMPLES[i][1]}\n"
 OPERATING_SYSTEM = platform.system()
 API_KEY_PATH = "/usr/src/alfred/openai.key"
 EXIT = "exit"
@@ -61,37 +64,26 @@ def get_openai_api_key():
     else:
         get_from_user_openai_api_key()
 
-def get_command(prompt):
-    result = openai.Completion.create(
-        engine=MODEL,
-        prompt=prompt,
-        max_tokens=2048,
+def create_openai_client():
+    return openai.OpenAI(api_key=openai.api_key)
+
+def get_command(client, prompt):
+    result = client.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {"role": "system", "content": EXAMPLE_PROMPT},
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
     )
     if result:
-        return clean_result(result.choices[0].text)
+        return result.choices[0].message.content
     else:
         return None
 
-def clean_result(result):
-    # Result is a string like 
-    # Answer: ['command', 'response']
-    # Get the response.
-    debug = False
-    pattern = r'^[\s\S]*.*\[+\s*[\'\"](.+)[\'\"]\s*,\s*[\'\"](.+)[\'\"]\s*\]+.*$'
-    match = re.match(pattern, result)
-    if debug:
-        matches = re.findall(pattern, result)
-        print(f"matches: {matches}")
-        print(f"match: {match.groups()}")
-        print(f"input: {result}")
-    if match:
-        response = match.group(2)
-    else:
-        response = result
-    if debug:    print(f"response: {response}")
-    return response
-
-def main(prompt):
+def main(client, prompt):
     condition = True
     while condition:
         condition = True if prompt is None else False
@@ -118,7 +110,7 @@ def main(prompt):
         # Process user prompt
         spinner = Halo(text='🧠 Thinking...', spinner='dots')
         spinner.start()
-        command = get_command(f'{EXAMPLES_CONTEXT} "{user_prompt}" on {OPERATING_SYSTEM} operating system and return the command to accomplish the task like this examples: {EXAMPLES}')
+        command = get_command(client, f'{EXAMPLES_CONTEXT} "{user_prompt}" on {OPERATING_SYSTEM} operating system')
         spinner.stop()
         if not command:
             print("🤔 I don't know.")
@@ -142,10 +134,11 @@ if __name__ == "__main__":
     if openai.api_key is None:
         print("✋ You need to set your OpenAI API key in the OPENAI_API_KEY environment variable or in the open_ai_api_key.py file as OPENAI_API_KEY variable.")
         sys.exit(1)
+    client = create_openai_client()
     num_args = len(sys.argv)
     prompt = None
     if num_args > 1:
         prompt = " ".join(sys.argv[1:])
     else:
         print(f"👋 Hello, human. I'm Alfred, your personal assistant. I can help you with your daily tasks. Tipe \"exit\" to quit.")
-    main(prompt)
+    main(client, prompt)
