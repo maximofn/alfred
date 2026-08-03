@@ -1,4 +1,5 @@
 open_ai_api_key.py
+openai.key
 alfred_config.py
 __pycache__
 videos
